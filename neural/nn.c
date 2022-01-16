@@ -9,6 +9,7 @@
 
 #define MAXCHAR 1000
 
+// 784, 300, 10
 NeuralNetwork* network_create(int input, int hidden, int output, double lr) {
 	NeuralNetwork* net = malloc(sizeof(NeuralNetwork));
 	net->input = input;
@@ -51,15 +52,11 @@ void network_train(NeuralNetwork* net, Matrix* input, Matrix* output) {
 	// )
 	Matrix* sigmoid_primed_mat = sigmoidPrime(final_outputs);
 	Matrix* multiplied_mat = multiply(output_errors, sigmoid_primed_mat);
-
 	Matrix* transposed_mat = transpose(hidden_outputs);
 	Matrix* dot_mat = dot(multiplied_mat, transposed_mat);
-
 	Matrix* scaled_mat = scale(net->learning_rate, dot_mat);
-
 	Matrix* added_mat = add(net->output_weights, scaled_mat);
-
-	matrix_free(net->output_weights);
+	matrix_free(net->output_weights); // Free the old weights before replacing
 	net->output_weights = added_mat;
 
 	matrix_free(sigmoid_primed_mat);
@@ -67,6 +64,7 @@ void network_train(NeuralNetwork* net, Matrix* input, Matrix* output) {
 	matrix_free(transposed_mat);
 	matrix_free(dot_mat);
 	matrix_free(scaled_mat);
+
 	// hidden_weights = add(
 	// 	 net->hidden_weights,
 	// 	 scale (
@@ -80,19 +78,15 @@ void network_train(NeuralNetwork* net, Matrix* input, Matrix* output) {
 	//      )
 	// 	 )
 	// )
+	// Reusing variables after freeing memory
 	sigmoid_primed_mat = sigmoidPrime(hidden_outputs);
 	multiplied_mat = multiply(hidden_errors, sigmoid_primed_mat);
-
 	transposed_mat = transpose(input);
 	dot_mat = dot(multiplied_mat, transposed_mat);
-	
-
 	scaled_mat = scale(net->learning_rate, dot_mat);
-
 	added_mat = add(net->hidden_weights, scaled_mat);
-
-	matrix_free(net->hidden_weights);
-	net->hidden_weights = added_mat;
+	matrix_free(net->hidden_weights); // Free the old hidden_weights before replacement
+	net->hidden_weights = added_mat; 
 
 	matrix_free(sigmoid_primed_mat);
 	matrix_free(multiplied_mat);
@@ -110,13 +104,10 @@ void network_train(NeuralNetwork* net, Matrix* input, Matrix* output) {
 }
 
 void network_train_batch_imgs(NeuralNetwork* net, Img** imgs, int batch_size) {
-	// I am not sure exactly how batch sizes work right now and I am feeling lazy so just 
-	// iterate over every input_data and train it rather than randomly sampling
 	for (int i = 0; i < batch_size; i++) {
 		if (i % 100 == 0) printf("Img No. %d\n", i);
 		Img* cur_img = imgs[i];
 		Matrix* img_data = matrix_flatten(cur_img->img_data, 0); // 0 = flatten to column vector
-		matrix_print(img_data);
 		Matrix* output = matrix_create(10, 1);
 		output->entries[cur_img->label][0] = 1; // Setting the result
 		network_train(net, img_data, output);
@@ -130,6 +121,18 @@ Matrix* network_predict_img(NeuralNetwork* net, Img* img) {
 	Matrix* res = network_predict(net, img_data);
 	matrix_free(img_data);
 	return res;
+}
+
+double network_predict_imgs(NeuralNetwork* net, Img** imgs, int n) {
+	int n_correct = 0;
+	for (int i = 0; i < n; i++) {
+		Matrix* prediction = network_predict_img(net, imgs[i]);
+		if (matrix_argmax(prediction) == imgs[i]->label) {
+			n_correct++;
+		}
+		matrix_free(prediction);
+	}
+	return 1.0 * n_correct / n;
 }
 
 Matrix* network_predict(NeuralNetwork* net, Matrix* input_data) {
@@ -184,4 +187,11 @@ void network_print(NeuralNetwork* net) {
 	matrix_print(net->hidden_weights);
 	printf("Output Weights: \n");
 	matrix_print(net->output_weights);
+}
+
+void network_free(NeuralNetwork *net) {
+	matrix_free(net->hidden_weights);
+	matrix_free(net->output_weights);
+	free(net);
+	net = NULL;
 }
