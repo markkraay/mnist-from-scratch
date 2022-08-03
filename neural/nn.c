@@ -156,7 +156,7 @@ void network_save(NeuralNetwork* net, char* file_string) {
 	matrix_save(net->hidden_weights, "hidden");
 	matrix_save(net->output_weights, "output");
 	printf("Successfully written to '%s'\n", file_string);
-	chdir("-"); // Go back to the orignal directory
+	chdir(".."); // Go back to the orignal directory
 }
 
 NeuralNetwork* network_load(char* file_string) {
