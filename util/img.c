@@ -51,4 +51,6 @@ void imgs_free(Img** imgs, int n) {
 	for (int i = 0; i < n; i++) {
 		img_free(imgs[i]);
 	}
+	free(imgs);
+	imgs = NULL;
 }

@@ -34,7 +34,9 @@ void network_train(NeuralNetwork* net, Matrix* input, Matrix* output) {
 
 	// Find errors
 	Matrix* output_errors = subtract(output, final_outputs);
-	Matrix* hidden_errors = dot(transpose(net->output_weights), output_errors);
+	Matrix* transposed_mat = transpose(net->output_weights);
+	Matrix* hidden_errors = dot(transposed_mat, output_errors);
+	matrix_free(transposed_mat);
 
 	// Backpropogate
 	// output_weights = add(
@@ -52,10 +54,11 @@ void network_train(NeuralNetwork* net, Matrix* input, Matrix* output) {
 	// )
 	Matrix* sigmoid_primed_mat = sigmoidPrime(final_outputs);
 	Matrix* multiplied_mat = multiply(output_errors, sigmoid_primed_mat);
-	Matrix* transposed_mat = transpose(hidden_outputs);
+	transposed_mat = transpose(hidden_outputs);
 	Matrix* dot_mat = dot(multiplied_mat, transposed_mat);
 	Matrix* scaled_mat = scale(net->learning_rate, dot_mat);
 	Matrix* added_mat = add(net->output_weights, scaled_mat);
+
 	matrix_free(net->output_weights); // Free the old weights before replacing
 	net->output_weights = added_mat;
 
@@ -141,6 +144,12 @@ Matrix* network_predict(NeuralNetwork* net, Matrix* input_data) {
 	Matrix* final_inputs = dot(net->output_weights, hidden_outputs);
 	Matrix* final_outputs = apply(sigmoid, final_inputs);
 	Matrix* result = softmax(final_outputs);
+
+	matrix_free(hidden_inputs);
+	matrix_free(hidden_outputs);
+	matrix_free(final_inputs);
+	matrix_free(final_outputs);
+
 	return result;
 }
 

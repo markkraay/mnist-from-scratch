@@ -28,6 +28,7 @@ void matrix_free(Matrix *m) {
 	for (int i = 0; i < m->rows; i++) {
 		free(m->entries[i]);
 	}
+	free(m->entries);
 	free(m);
 	m = NULL;
 }
