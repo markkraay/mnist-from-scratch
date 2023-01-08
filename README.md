@@ -8,4 +8,4 @@ unzip mnist-in-csv.zip -d data
 ```
 
 ### Video
-[![Watch the video](https://img.youtube.com/vi/T-ReOxVMxS83o/maxresdefault.jpg)](https://youtu.be/T-ReOxVMxS83o)
+[![Watch the video](https://img.youtube.com/vi/ReOxVMxS83o/maxresdefault.jpg)](https://youtu.be/ReOxVMxS83o)
