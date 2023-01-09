@@ -1,5 +1,6 @@
 # mnist-from-scratch
 Code for training basic neural networks, especially the MNIST numbers dataset.
+Parallelized using OpenMP!
 
 ### Get the training dataset
 ```
