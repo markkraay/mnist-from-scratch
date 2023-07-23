@@ -5,6 +5,15 @@
 
 #define MAXCHAR 100
 
+#define RED "\x1B[31m"
+#define GRN "\x1B[32m"
+#define YEL "\x1B[33m"
+#define BLU "\x1B[34m"
+#define MAG "\x1B[35m"
+#define CYN "\x1B[36m"
+#define WHT "\x1B[37m"
+#define RESET "\x1B[0m"
+
 Matrix* matrix_create(int row, int col) {
 	Matrix *matrix = malloc(sizeof(Matrix));
 	matrix->rows = row;
@@ -30,17 +39,35 @@ void matrix_free(Matrix *m) {
 	}
 	free(m->entries);
 	free(m);
-	m = NULL;
 }
 
 void matrix_print(Matrix* m) {
 	printf("Rows: %d Columns: %d\n", m->rows, m->cols);
 	for (int i = 0; i < m->rows; i++) {
 		for (int j = 0; j < m->cols; j++) {
-			printf("%1.3f ", m->entries[i][j]);
+      if (m->entries[i][j] < 0.12) {
+        printf(RED);
+      } else if (m->entries[i][j] < 0.24) {
+        printf(GRN);
+      } else if (m->entries[i][j] < 0.36) {
+        printf(YEL);
+      } else if (m->entries[i][j] < 0.48) {
+        printf(BLU);
+      } else if (m->entries[i][j] < 0.6) {
+        printf(MAG);
+      } else if (m->entries[i][j] < 0.72) {
+        printf(CYN);
+      } else if (m->entries[i][j] < 0.84) {
+        printf(WHT);
+      } else {
+        printf(RESET);
+      }
+			printf("% 1.3f ", m->entries[i][j]);
 		}
+    printf(RESET);
 		printf("\n");
 	}
+  printf("\n");
 }
 
 Matrix* matrix_copy(Matrix* m) {

@@ -44,7 +44,6 @@ void img_print(Img* img) {
 void img_free(Img* img) {
 	matrix_free(img->img_data);
 	free(img);
-	img = NULL;
 }
 
 void imgs_free(Img** imgs, int n) {
@@ -52,5 +51,4 @@ void imgs_free(Img** imgs, int n) {
 		img_free(imgs[i]);
 	}
 	free(imgs);
-	imgs = NULL;
 }

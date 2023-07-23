@@ -202,5 +202,4 @@ void network_free(NeuralNetwork *net) {
 	matrix_free(net->hidden_weights);
 	matrix_free(net->output_weights);
 	free(net);
-	net = NULL;
 }
