@@ -11,3 +11,5 @@ unzip mnist-in-csv.zip -d data
 [![Watch the video](https://img.youtube.com/vi/ReOxVMxS83o/maxresdefault.jpg)](https://youtu.be/ReOxVMxS83o)
 
 ### Checkout the other branches for different parallelization solutions!
+
+I am loving this project.
