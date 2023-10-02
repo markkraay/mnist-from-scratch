@@ -13,3 +13,4 @@ unzip mnist-in-csv.zip -d data
 ### Checkout the other branches for different parallelization solutions!
 
 I am loving this project.
+I am such a maya
